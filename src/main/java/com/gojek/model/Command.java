@@ -6,7 +6,7 @@ package com.gojek.model;
 public enum Command {
 
 
-    CREATE("create_parking_lot"), PARK("park"), LEAVE("leave"), STATUS("status"), REG_COLOR("registration_numbers_for_cars_with_colour"), SLOT_COLOR("slot_numbers_for_cars_with_colour"), SLOT_REGISTRATION("slot_number_for_registration_number");
+    CREATE("create_parking_lot"), PARK("park"), LEAVE("leave"), x("status"), REG_COLOR("registration_numbers_for_cars_with_colour"), SLOT_COLOR("slot_numbers_for_cars_with_colour"), SLOT_REGISTRATION("slot_number_for_registration_number");
 
     private final String msg;
 

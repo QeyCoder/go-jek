@@ -1,7 +1,9 @@
+import com.gojek.exception.InvalidSlot;
+import com.gojek.exception.ParkingFullException;
 import com.gojek.model.Car;
 import com.gojek.model.Slot;
 
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * Created by Gaurav on 04/04/18.
@@ -15,21 +17,70 @@ public class ParkingService {
 
     private Slot[] slots;
 
-    private PriorityQueue<Integer> cars;
+    private PriorityQueue<Integer> queue;
+    private Map<String, List<Slot>> colorVsSlots;
 
     public ParkingService(int size) {
         this.size = size;
         slots = new Slot[size];
-        cars = new PriorityQueue<Integer>();
+        queue = new PriorityQueue<Integer>();
+        colorVsSlots = new HashMap<String, List<Slot>>();
         for (int i = 1; i <= size; i++) {
-            cars.add(i);
+            queue.add(i);
         }
     }
 
 
-    public void park(Car car){
-
+    public Integer park(Car car) throws ParkingFullException {
+        if (currentCapacity == size) {
+            throw new ParkingFullException("Sorry,   parking   lot   is   full");
+        }
+        Integer slotId = queue.poll();
+        Slot slot = new Slot(slotId, car);
+        slots[slotId] = slot;
+        String color = car.getColor();
+        List<Slot> carSlots = colorVsSlots.get(color);
+        if (carSlots == null) {
+            carSlots = new ArrayList<Slot>();
+        }
+        carSlots.add(slot);
+        colorVsSlots.put(color, carSlots);
+        return slotId;
     }
 
+    public boolean removeCar(int slotId) throws InvalidSlot {
+        if (slotId < 0 || slotId > size) {
+            throw new InvalidSlot("Invalid Slot");
+        }
+
+        Slot slot = slots[slotId];
+        Car car = slot.getCar();
+        String color = car.getColor();
+
+        colorVsSlots.get(color).remove(slot);
+
+        queue.add(slotId);
+        return true;
+    }
+
+
+    public Collection<Slot> getSlotsByColor(String color) {
+        List<Slot> slotList = colorVsSlots.get(color);
+        if (slotList == null) {
+
+            slotList = new ArrayList<Slot>();
+        }
+
+        return slotList;
+    }
+
+    public Collection<String> getRegistrationBySlot(String color) {
+        Collection<Slot> slotList = getSlotsByColor(color);
+        Collection<String> strings = new ArrayList<>();
+        slotList.forEach(slot -> {
+            strings.add(slot.getCar().getRegistrationId());
+        });
+        return strings;
+    }
 
 }

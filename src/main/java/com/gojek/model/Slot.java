@@ -7,7 +7,15 @@ package com.gojek.model;
 
 public class Slot {
 
+    int id;
+    private final Car car;
 
-    int slotId;
+    public Slot(int id, Car car) {
+        this.car = car;
+        this.id = id;
+    }
 
+    public Car getCar() {
+        return car;
+    }
 }
