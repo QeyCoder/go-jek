@@ -4,6 +4,7 @@ import com.gojek.exception.InvalidColor;
 import com.gojek.exception.InvalidRegistration;
 import com.gojek.exception.InvalidSlot;
 import com.gojek.exception.ParkingFullException;
+import com.gojek.helper.Constant;
 import com.gojek.model.Car;
 import com.gojek.model.Command;
 import com.gojek.service.ParkingService;

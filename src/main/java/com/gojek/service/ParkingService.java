@@ -1,10 +1,10 @@
 package com.gojek.service;
 
-import com.gojek.Constant;
 import com.gojek.exception.InvalidColor;
 import com.gojek.exception.InvalidRegistration;
 import com.gojek.exception.InvalidSlot;
 import com.gojek.exception.ParkingFullException;
+import com.gojek.helper.Constant;
 import com.gojek.helper.SlotComparator;
 import com.gojek.model.Car;
 import com.gojek.model.Slot;
@@ -42,7 +42,7 @@ public class ParkingService {
 
     public String park(Car car) throws ParkingFullException {
         if (currentCapacity == size) {
-            throw new ParkingFullException(Constant.SORRY_PARKING_LOT_IS_FULL);
+            throw new ParkingFullException(Constant.PARKING_FULL);
         }
         currentCapacity++;
         Integer slotId = queue.poll();

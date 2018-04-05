@@ -16,7 +16,7 @@ public class Constant {
     public static final String BLANK = "";
     public static final String INVALID_SLOT = "Invalid Slot";
     public static final String PARKING_INTIALIZE = "Created a parking lot with {0} slots ";
-    public static final String SORRY_PARKING_LOT_IS_FULL = "Sorry, parking lot is full";
+    public static final String PARKING_FULL = "Sorry, parking lot is full";
     public static final String ALLOCATED_SLOT_NUMBER = "Allocated slot number: {0}";
     public static final String NO_CAR_WITH_COLOR = "No car with Color";
     public static final String SLOT_NO = "Slot No";
