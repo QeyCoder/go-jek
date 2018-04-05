@@ -20,3 +20,8 @@ Step to run application
 **P.S :**
 1. Type X or blank line will quit the program
 2. In case of invalid query is supplied application will exit as there is no benifit of running application when an invalid input is provided input. we can modify the implemenation in case changes are required
+
+
+**Assumption**
+
+While developing the application some assumption is consider that user may specify some invalid command  so for these some extra messages were added
