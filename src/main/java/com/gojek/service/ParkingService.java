@@ -1,11 +1,15 @@
 package com.gojek.service;
 
+import com.gojek.Constant;
+import com.gojek.exception.InvalidColor;
 import com.gojek.exception.InvalidRegistration;
 import com.gojek.exception.InvalidSlot;
 import com.gojek.exception.ParkingFullException;
+import com.gojek.helper.SlotComparator;
 import com.gojek.model.Car;
 import com.gojek.model.Slot;
 
+import java.text.MessageFormat;
 import java.util.*;
 
 /**
@@ -15,21 +19,19 @@ import java.util.*;
 
 public class ParkingService {
 
-    public static final String INVALID_SLOT = "Invalid Slot";
+
     private int size;
     private int currentCapacity;
-
     private Slot[] slots;
-
     private PriorityQueue<Integer> queue;
     private Map<String, List<Slot>> colorVsSlots;
     private Map<String, Integer> regVsSlot = new HashMap<>();
-    private final String COMMA = ",";
-    private final String NEW_LINE = "\n";
+
+    private Comparator<Slot> slotComparator = new SlotComparator();
 
     public ParkingService(int size) {
         this.size = size;
-        slots = new Slot[size];
+        slots = new Slot[size + 1];
         queue = new PriorityQueue<Integer>();
         colorVsSlots = new HashMap<String, List<Slot>>();
         for (int i = 1; i <= size; i++) {
@@ -40,10 +42,10 @@ public class ParkingService {
 
     public String park(Car car) throws ParkingFullException {
         if (currentCapacity == size) {
-            throw new ParkingFullException("Sorry, parking lot is full");
+            throw new ParkingFullException(Constant.SORRY_PARKING_LOT_IS_FULL);
         }
         currentCapacity++;
-        Integer slotId = queue.poll() - 1;
+        Integer slotId = queue.poll();
         Slot slot = new Slot(slotId, car);
         slots[slotId] = slot;
         String color = car.getColor();
@@ -53,41 +55,52 @@ public class ParkingService {
         }
         carSlots.add(slot);
         colorVsSlots.put(color, carSlots);
-        regVsSlot.put(car.getRegistrationId(), slotId + 1);
-        return "Allocated slot number: " + (slotId + 1);
+        regVsSlot.put(car.getRegistrationId(), slotId);
+        return MessageFormat.format(Constant.ALLOCATED_SLOT_NUMBER, slotId);
     }
 
     public String removeCar(int slotId) throws InvalidSlot {
         if (slotId < 0 || slotId > size) {
-            throw new InvalidSlot(INVALID_SLOT);
+            throw new InvalidSlot(Constant.INVALID_SLOT);
         }
         currentCapacity--;
         Slot slot = slots[slotId];
+        if (slot == null) {
+            throw new InvalidSlot(Constant.INVALID_SLOT);
+        }
         Car car = slot.getCar();
         String color = car.getColor();
         colorVsSlots.get(color).remove(slot);
         regVsSlot.remove(car.getRegistrationId());
         queue.add(slotId);
-        return "Slot number " + slotId + " is free";
+        return MessageFormat.format(Constant.FREE_SLOT, slotId);
     }
 
 
-    public String getSlotsByColor(String color) {
+    public String getSlotsByColor(String color) throws InvalidColor {
         List<Slot> slotList = colorVsSlots.get(color);
+        if (slotList == null) {
+            throw new InvalidColor(Constant.NO_CAR_WITH_COLOR);
+        }
+        Collections.sort(slotList, slotComparator);
         StringBuilder slotIds = new StringBuilder();
 
         slotList.forEach(slot -> {
-            slotIds.append(slot.getId() + 1).append(COMMA);
+            slotIds.append(slot.getId()).append(Constant.COMMA);
         });
         slotIds.deleteCharAt(slotIds.length() - 1);
         return slotIds.toString();
     }
 
-    public String getRegistrationByColor(String color) {
+    public String getRegistrationByColor(String color) throws InvalidColor {
         List<Slot> slotList = colorVsSlots.get(color);
+        if (slotList == null) {
+            throw new InvalidColor(Constant.NO_CAR_WITH_COLOR);
+        }
+        Collections.sort(slotList, slotComparator);
         StringBuilder registrationIds = new StringBuilder();
         slotList.forEach(slot -> {
-            registrationIds.append(slot.getCar().getRegistrationId()).append(COMMA);
+            registrationIds.append(slot.getCar().getRegistrationId()).append(Constant.COMMA);
         });
         registrationIds.deleteCharAt(registrationIds.length() - 1);
 
@@ -97,25 +110,17 @@ public class ParkingService {
     public String getSlotByRegistrationId(String regId) throws InvalidRegistration {
         Integer slotId = regVsSlot.get(regId);
         if (slotId == null) {
-            throw new InvalidRegistration("Not found");
+            throw new InvalidRegistration(Constant.NOT_FOUND);
         }
         return String.valueOf(slotId);
 
     }
 
 
-    public String getRegistrationBySlotId(int id) throws Exception {
+    public String getColorBySlotId(int id) throws InvalidSlot {
         Slot slot = slots[id];
         if (slot == null) {
-            throw new InvalidSlot(INVALID_SLOT);
-        }
-        return slot.getCar().getRegistrationId();
-    }
-
-    public String getColorBySlotId(int id) throws Exception {
-        Slot slot = slots[id];
-        if (slot == null) {
-            throw new InvalidSlot(INVALID_SLOT);
+            throw new InvalidSlot(Constant.INVALID_SLOT);
         }
         return slot.getCar().getColor();
     }
@@ -123,12 +128,12 @@ public class ParkingService {
 
     public String getStatus() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format("%1s%26s%12s", "Slot No", "Registration No.", "Colour")).append(NEW_LINE);
+        stringBuilder.append(String.format(Constant.HEADER_FORMATTER, Constant.SLOT_NO, Constant.REGISTRATION_NO, Constant.COLOUR)).append(Constant.NEW_LINE);
         for (int i = 0; i < slots.length; i++) {
             Slot slot = slots[i];
             if (slot != null) {
                 Car car = slot.getCar();
-                stringBuilder.append(String.format("%5s%25s%15s", slot.getId() + 1, car.getRegistrationId(), car.getColor())).append(NEW_LINE);
+                stringBuilder.append(String.format(Constant.VALUE_FORMATTER, slot.getId(), car.getRegistrationId(), car.getColor())).append(Constant.NEW_LINE);
             }
         }
         return stringBuilder.toString();

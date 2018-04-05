@@ -5,17 +5,18 @@ package com.gojek.exception;
  */
 
 
-public class InvalidColor extends Exception {
-
+public class InvalidQuery extends Exception {
 
     private final String message;
 
-    public InvalidColor(String message) {
-        this.message  =  message;
+    public InvalidQuery(String message) {
+        this.message = message;
     }
 
     @Override
     public String getMessage() {
         return message;
     }
+
+
 }

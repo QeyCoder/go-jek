@@ -11,12 +11,11 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         Positive.class, Negative.class
 })
-public class GoJekParking {
-
+public class GoJekParkingTest {
 
 
     @Test
-    public void test(){
-            //TODO do nothing
+    public void test() {
+        //TODO do nothing
     }
 }
