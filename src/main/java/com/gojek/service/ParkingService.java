@@ -29,17 +29,30 @@ public class ParkingService {
 
     private Comparator<Slot> slotComparator = new SlotComparator();
 
+    /**
+     *
+     * @param size
+     */
     public ParkingService(int size) {
         this.size = size;
         slots = new Slot[size + 1];
         queue = new PriorityQueue<Integer>();
         colorVsSlots = new HashMap<String, List<Slot>>();
+        /**
+         * slot will be always be unused using 1 extra space  to make logic simple
+         */
+
         for (int i = 1; i <= size; i++) {
             queue.add(i);
         }
     }
 
-
+    /**
+     *
+     * @param car
+     * @return
+     * @throws ParkingFullException
+     */
     public String park(Car car) throws ParkingFullException {
         if (currentCapacity == size) {
             throw new ParkingFullException(Constant.PARKING_FULL);
@@ -59,6 +72,12 @@ public class ParkingService {
         return MessageFormat.format(Constant.ALLOCATED_SLOT_NUMBER, slotId);
     }
 
+    /**
+     *
+     * @param slotId
+     * @return
+     * @throws InvalidSlot
+     */
     public String removeCar(int slotId) throws InvalidSlot {
         if (slotId < 0 || slotId > size) {
             throw new InvalidSlot(Constant.INVALID_SLOT);
@@ -76,7 +95,12 @@ public class ParkingService {
         return MessageFormat.format(Constant.FREE_SLOT, slotId);
     }
 
-
+    /**
+     *
+     * @param color
+     * @return
+     * @throws InvalidColor
+     */
     public String getSlotsByColor(String color) throws InvalidColor {
         List<Slot> slotList = colorVsSlots.get(color);
         if (slotList == null) {
@@ -92,6 +116,12 @@ public class ParkingService {
         return slotIds.toString();
     }
 
+    /**
+     *
+     * @param color
+     * @return
+     * @throws InvalidColor
+     */
     public String getRegistrationByColor(String color) throws InvalidColor {
         List<Slot> slotList = colorVsSlots.get(color);
         if (slotList == null) {
@@ -107,6 +137,12 @@ public class ParkingService {
         return registrationIds.toString();
     }
 
+    /**
+     *
+     * @param regId
+     * @return
+     * @throws InvalidRegistration
+     */
     public String getSlotByRegistrationId(String regId) throws InvalidRegistration {
         Integer slotId = regVsSlot.get(regId);
         if (slotId == null) {
@@ -116,6 +152,12 @@ public class ParkingService {
 
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws InvalidSlot
+     */
 
     public String getColorBySlotId(int id) throws InvalidSlot {
         Slot slot = slots[id];
@@ -125,6 +167,10 @@ public class ParkingService {
         return slot.getCar().getColor();
     }
 
+    /**
+     *
+     * @return
+     */
 
     public String getStatus() {
         StringBuilder stringBuilder = new StringBuilder();
