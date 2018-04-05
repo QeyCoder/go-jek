@@ -1,5 +1,6 @@
 package com.gojek;
 
+import com.gojek.exception.InvalidRegistration;
 import com.gojek.exception.InvalidSlot;
 import com.gojek.exception.ParkingFullException;
 import com.gojek.model.Car;
@@ -18,17 +19,17 @@ public class ApplicationEntryPoint {
     public static ParkingService parkingService;
 
     public static void main(String[] args) throws IOException {
-        InputStream source = null;
+        InputStream inputSource = null;
         int mode = 0;
         if (args.length == 0) {
-            source = System.in;
+            inputSource = System.in;
         } else {
             mode = 1;
-            source = new FileInputStream(args[1]);
+            inputSource = new FileInputStream(args[1]);
         }
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(source));
-        if (mode == 1) {
-            System.out.println("Type X to exit");
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputSource));
+        if (mode == 0) {
+            System.out.println("Type X and press Enter to exit");
         }
         String[] input = bufferedReader.readLine().split(" ");
         int size = Integer.parseInt(input[1]);
@@ -47,32 +48,40 @@ public class ApplicationEntryPoint {
             }
             Command command = Command.valueOf(type.toUpperCase());
             String response = null;
+            String registrationNumber;
+            String color;
+
             switch (command) {
                 case PARK:
 
-                    String registrationNumber = splittedQuery[1];
-                    String color = splittedQuery[2];
+                    registrationNumber = splittedQuery[1];
+                    color = splittedQuery[2];
                     Car car = new Car(registrationNumber, color);
                     try {
                         response = parkingService.park(car);
-
                     } catch (ParkingFullException e) {
                         response = e.getMessage();
                     }
 
                     break;
                 case REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR:
-
-
+                    color = splittedQuery[1];
+                    response = parkingService.getRegistrationByColor(color);
                     break;
                 case SLOT_NUMBER_FOR_REGISTRATION_NUMBER:
-                    //TODO
+                    registrationNumber = splittedQuery[1];
+                    try {
+                        response = parkingService.getSlotByRegistrationId(registrationNumber);
+                    } catch (InvalidRegistration invalidRegistration) {
+                        response = invalidRegistration.getMessage();
+                    }
                     break;
                 case STATUS:
-                    //TODO
+                    response = parkingService.getStatus();
                     break;
                 case SLOT_NUMBERS_FOR_CARS_WITH_COLOUR:
-                    //TODO
+                    color = splittedQuery[1];
+                    response = parkingService.getSlotsByColor(color);
                     break;
                 case LEAVE:
 
@@ -84,7 +93,7 @@ public class ApplicationEntryPoint {
                     }
                     break;
                 default:
-                    //TODO
+                    //TODO NOTHING
                     break;
 
 
@@ -93,7 +102,7 @@ public class ApplicationEntryPoint {
         }
         System.out.println("Bye Bye !!");
 
-        source.close();
+        inputSource.close();
 
     }
 

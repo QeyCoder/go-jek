@@ -1,15 +1,16 @@
 package com.gojek.exception;
 
 /**
- * Created by Gaurav on 04/04/18.
+ * Created by Gaurav on 05/04/18.
  */
 
 
-public class ParkingFullException extends Exception {
+public class InvalidRegistration extends Exception {
+
 
     private final String message;
 
-    public ParkingFullException(String message) {
+    public InvalidRegistration(String message) {
         this.message = message;
     }
 
@@ -17,4 +18,5 @@ public class ParkingFullException extends Exception {
     public String getMessage() {
         return message;
     }
+
 }

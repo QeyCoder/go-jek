@@ -18,4 +18,8 @@ public class Slot {
     public Car getCar() {
         return car;
     }
+
+    public int getId() {
+        return id;
+    }
 }
