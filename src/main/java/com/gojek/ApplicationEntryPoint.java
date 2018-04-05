@@ -25,7 +25,7 @@ public class ApplicationEntryPoint {
             inputSource = System.in;
         } else {
             mode = 1;
-            inputSource = new FileInputStream(args[1]);
+            inputSource = new FileInputStream(args[0]);
         }
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputSource));
         if (mode == 0) {
@@ -39,13 +39,20 @@ public class ApplicationEntryPoint {
 
         boolean running = true;
         while (running) {
-            String query = bufferedReader.readLine();
 
-            String[] splittedQuery = query.split(" ");
-            String type = splittedQuery[0];
-            if (type.equalsIgnoreCase("X")) {
+            String query = bufferedReader.readLine();
+            if (query == null && mode == 1) {
+
+                //EOF file
                 break;
             }
+            String[] splittedQuery = query.split(" ");
+            String type = splittedQuery[0];
+            if ("X".equalsIgnoreCase(type) || "".equals(type)) {
+                break;
+            }
+
+
             Command command = Command.valueOf(type.toUpperCase());
             String response = null;
             String registrationNumber;
@@ -53,7 +60,6 @@ public class ApplicationEntryPoint {
 
             switch (command) {
                 case PARK:
-
                     registrationNumber = splittedQuery[1];
                     color = splittedQuery[2];
                     Car car = new Car(registrationNumber, color);
@@ -95,12 +101,9 @@ public class ApplicationEntryPoint {
                 default:
                     //TODO NOTHING
                     break;
-
-
             }
             System.out.println(response);
         }
-        System.out.println("Bye Bye !!");
 
         inputSource.close();
 
