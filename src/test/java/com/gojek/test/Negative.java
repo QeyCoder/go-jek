@@ -1,6 +1,7 @@
 package com.gojek.test;
 
 import com.gojek.exception.InvalidColor;
+import com.gojek.exception.InvalidRegistration;
 import com.gojek.exception.InvalidSlot;
 import com.gojek.exception.ParkingFullException;
 import com.gojek.service.ParkingService;
@@ -18,7 +19,7 @@ public class Negative {
     private int DEFAULT_SIZE = 10;
 
     @Test(expected = ParkingFullException.class)
-    public void parkWhenParkingFull() throws ParkingFullException {
+    public void parkWhenParkingFull() throws ParkingFullException, InvalidRegistration {
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         parkingservice.park(ParkingTestHelper.getCar("HR-32-1001", "White"));
         parkingservice.park(ParkingTestHelper.getCar("HR-32-1002", "White"));
@@ -37,7 +38,7 @@ public class Negative {
 
 
     @Test(expected = InvalidSlot.class)
-    public void invalidSlot() throws ParkingFullException, InvalidSlot {
+    public void invalidSlot() throws ParkingFullException, InvalidSlot, InvalidRegistration {
 
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         //1st slot for
@@ -50,7 +51,7 @@ public class Negative {
 
 
     @Test(expected = InvalidColor.class)
-    public void queryForInvalidColor() throws ParkingFullException, InvalidColor {
+    public void queryForInvalidColor() throws ParkingFullException, InvalidColor, InvalidRegistration {
 
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         parkingservice.park(ParkingTestHelper.getCar("HR-32-1001", "White"));

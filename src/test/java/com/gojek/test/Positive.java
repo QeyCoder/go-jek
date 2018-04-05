@@ -17,7 +17,7 @@ public class Positive {
     private static final int DEFAULT_SIZE = 10;
 
     @Test
-    public void parkLeave() throws ParkingFullException, InvalidSlot {
+    public void parkLeave() throws ParkingFullException, InvalidSlot, InvalidRegistration {
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         String response = parkingservice.park(ParkingTestHelper.getCar("HR-32-9898", "White"));
         Assert.assertEquals("Allocated slot number: 1", response);
@@ -33,7 +33,7 @@ public class Positive {
 
 
     @Test
-    public void removeCar() throws ParkingFullException, InvalidSlot {
+    public void removeCar() throws ParkingFullException, InvalidSlot, InvalidRegistration {
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         parkingservice.park(ParkingTestHelper.getCar("HR-32-9898", "White"));
         parkingservice.park(ParkingTestHelper.getCar("HR-32-9899", "White"));
@@ -45,7 +45,7 @@ public class Positive {
 
 
     @Test
-    public void registrationByColor() throws ParkingFullException, InvalidSlot, InvalidColor {
+    public void registrationByColor() throws ParkingFullException, InvalidSlot, InvalidColor, InvalidRegistration {
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         String response = parkingservice.park(ParkingTestHelper.getCar("HR-32-9898", "White"));
         Assert.assertEquals("Allocated slot number: 1", response);
@@ -63,7 +63,7 @@ public class Positive {
 
 
     @Test
-    public void slotByColor() throws ParkingFullException, InvalidSlot, InvalidColor {
+    public void slotByColor() throws ParkingFullException, InvalidSlot, InvalidColor, InvalidRegistration {
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         parkingservice.park(ParkingTestHelper.getCar("HR-32-9898", "White"));
         parkingservice.park(ParkingTestHelper.getCar("HR-32-9899", "White"));
@@ -77,7 +77,7 @@ public class Positive {
 
 
     @Test
-    public void shouldReturnMinimumAvailbleSlot() throws ParkingFullException, InvalidSlot {
+    public void shouldReturnMinimumAvailbleSlot() throws ParkingFullException, InvalidSlot, InvalidRegistration {
         parkLeave();
         //same test case will cover min slot
 

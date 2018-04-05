@@ -9,7 +9,7 @@ public class Constant {
 
 
     public static final String INVALID_QUERY = "Invalid Query";
-    public static final String EXIT_COMMAND = "Type X and press Enter to exit";
+    public static final String EXIT_COMMAND = "Type Ctrl+C OR press Enter with out input to exit";
     public static final String SPACE = " ";
     public static final String INVALID_FILE_PATH = "Invalid File Path";
     public static final String EXIT_KEY = "X";
@@ -28,5 +28,7 @@ public class Constant {
     public static final String NEW_LINE = "\n";
     public static final String NOT_FOUND = "Not found";
     public static final String FREE_SLOT = "Slot number {0} is free";
+    public static final String EXIT = "EXIT";
+    public static String CAR_ALREADY_EXIST = "Car with registrationId {0} already Parked";
 }
 

@@ -24,20 +24,22 @@ public class ParkingService {
     private int currentCapacity;
     private Slot[] slots;
     private PriorityQueue<Integer> queue;
+    /**
+     * Storing color as lowecase to avoid confusion between red & RED or Red Same for registrationId
+     */
     private Map<String, List<Slot>> colorVsSlots;
     private Map<String, Integer> regVsSlot = new HashMap<>();
 
     private Comparator<Slot> slotComparator = new SlotComparator();
 
     /**
-     *
      * @param size
      */
     public ParkingService(int size) {
         this.size = size;
         slots = new Slot[size + 1];
-        queue = new PriorityQueue<Integer>();
-        colorVsSlots = new HashMap<String, List<Slot>>();
+        queue = new PriorityQueue<>();
+        colorVsSlots = new HashMap<>();
         /**
          * slot will be always be unused using 1 extra space  to make logic simple
          */
@@ -48,32 +50,33 @@ public class ParkingService {
     }
 
     /**
-     *
      * @param car
      * @return
      * @throws ParkingFullException
      */
-    public String park(Car car) throws ParkingFullException {
+    public String park(Car car) throws ParkingFullException, InvalidRegistration {
         if (currentCapacity == size) {
             throw new ParkingFullException(Constant.PARKING_FULL);
+        }
+        if (regVsSlot.containsKey(car.getRegistrationId().toLowerCase())) {
+            throw new InvalidRegistration(MessageFormat.format(Constant.CAR_ALREADY_EXIST, car.getRegistrationId()));
         }
         currentCapacity++;
         Integer slotId = queue.poll();
         Slot slot = new Slot(slotId, car);
         slots[slotId] = slot;
-        String color = car.getColor();
+        String color = car.getColor().toLowerCase();
         List<Slot> carSlots = colorVsSlots.get(color);
         if (carSlots == null) {
             carSlots = new ArrayList<>();
         }
         carSlots.add(slot);
         colorVsSlots.put(color, carSlots);
-        regVsSlot.put(car.getRegistrationId(), slotId);
+        regVsSlot.put(car.getRegistrationId().toLowerCase(), slotId);
         return MessageFormat.format(Constant.ALLOCATED_SLOT_NUMBER, slotId);
     }
 
     /**
-     *
      * @param slotId
      * @return
      * @throws InvalidSlot
@@ -88,21 +91,20 @@ public class ParkingService {
             throw new InvalidSlot(Constant.INVALID_SLOT);
         }
         Car car = slot.getCar();
-        String color = car.getColor();
+        String color = car.getColor().toLowerCase();
         colorVsSlots.get(color).remove(slot);
-        regVsSlot.remove(car.getRegistrationId());
+        regVsSlot.remove(car.getRegistrationId().toLowerCase());
         queue.add(slotId);
         return MessageFormat.format(Constant.FREE_SLOT, slotId);
     }
 
     /**
-     *
      * @param color
      * @return
      * @throws InvalidColor
      */
     public String getSlotsByColor(String color) throws InvalidColor {
-        List<Slot> slotList = colorVsSlots.get(color);
+        List<Slot> slotList = colorVsSlots.get(color.toLowerCase());
         if (slotList == null) {
             throw new InvalidColor(Constant.NO_CAR_WITH_COLOR);
         }
@@ -117,13 +119,12 @@ public class ParkingService {
     }
 
     /**
-     *
      * @param color
      * @return
      * @throws InvalidColor
      */
     public String getRegistrationByColor(String color) throws InvalidColor {
-        List<Slot> slotList = colorVsSlots.get(color);
+        List<Slot> slotList = colorVsSlots.get(color.toLowerCase());
         if (slotList == null) {
             throw new InvalidColor(Constant.NO_CAR_WITH_COLOR);
         }
@@ -138,13 +139,12 @@ public class ParkingService {
     }
 
     /**
-     *
      * @param regId
      * @return
      * @throws InvalidRegistration
      */
     public String getSlotByRegistrationId(String regId) throws InvalidRegistration {
-        Integer slotId = regVsSlot.get(regId);
+        Integer slotId = regVsSlot.get(regId.toLowerCase());
         if (slotId == null) {
             throw new InvalidRegistration(Constant.NOT_FOUND);
         }
@@ -153,7 +153,6 @@ public class ParkingService {
     }
 
     /**
-     *
      * @param id
      * @return
      * @throws InvalidSlot
@@ -168,7 +167,6 @@ public class ParkingService {
     }
 
     /**
-     *
      * @return
      */
 
