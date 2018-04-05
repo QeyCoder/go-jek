@@ -1,3 +1,4 @@
+package com.gojek.service;
 import com.gojek.exception.InvalidSlot;
 import com.gojek.exception.ParkingFullException;
 import com.gojek.model.Car;
@@ -31,7 +32,7 @@ public class ParkingService {
     }
 
 
-    public Integer park(Car car) throws ParkingFullException {
+    public String park(Car car) throws ParkingFullException {
         if (currentCapacity == size) {
             throw new ParkingFullException("Sorry,   parking   lot   is   full");
         }
@@ -45,10 +46,10 @@ public class ParkingService {
         }
         carSlots.add(slot);
         colorVsSlots.put(color, carSlots);
-        return slotId;
+        return "Allocated slot number: " + slotId;
     }
 
-    public boolean removeCar(int slotId) throws InvalidSlot {
+    public String removeCar(int slotId) throws InvalidSlot {
         if (slotId < 0 || slotId > size) {
             throw new InvalidSlot("Invalid Slot");
         }
@@ -56,11 +57,9 @@ public class ParkingService {
         Slot slot = slots[slotId];
         Car car = slot.getCar();
         String color = car.getColor();
-
         colorVsSlots.get(color).remove(slot);
-
         queue.add(slotId);
-        return true;
+        return "Slot number " + slotId + " is free";
     }
 
 
@@ -82,5 +81,28 @@ public class ParkingService {
         });
         return strings;
     }
+
+    public void getSlotByRegistrationId(String regId) {
+        //TODO
+
+    }
+
+
+    public String getRegistrationBySlotId(int id) throws Exception {
+        Slot slot = slots[id];
+        if (slot == null) {
+            throw new InvalidSlot("Invalid Slot");
+        }
+        return slot.getCar().getRegistrationId();
+    }
+
+    public String getColorBySlotId(int id) throws Exception {
+        Slot slot = slots[id];
+        if (slot == null) {
+            throw new InvalidSlot("Invalid Slot");
+        }
+        return slot.getCar().getColor();
+    }
+
 
 }

@@ -10,20 +10,18 @@ public class Car {
     private String registrationId;
     private String color;
 
+    public Car(String registrationNumber, String color) {
+        this.registrationId = registrationNumber;
+        this.color = color;
+    }
+
 
     public String getRegistrationId() {
         return registrationId;
-    }
-
-    public void setRegistrationId(String registrationId) {
-        this.registrationId = registrationId;
     }
 
     public String getColor() {
         return color;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
 }

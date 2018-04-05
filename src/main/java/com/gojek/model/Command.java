@@ -6,11 +6,7 @@ package com.gojek.model;
 public enum Command {
 
 
-    CREATE("create_parking_lot"), PARK("park"), LEAVE("leave"), x("status"), REG_COLOR("registration_numbers_for_cars_with_colour"), SLOT_COLOR("slot_numbers_for_cars_with_colour"), SLOT_REGISTRATION("slot_number_for_registration_number");
+    CREATE_PARKING_LOT, PARK, LEAVE, STATUS, REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR, SLOT_NUMBERS_FOR_CARS_WITH_COLOUR, SLOT_NUMBER_FOR_REGISTRATION_NUMBER;
 
-    private final String msg;
 
-    Command(String msg) {
-        this.msg = msg;
-    }
 }
