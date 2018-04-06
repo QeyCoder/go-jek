@@ -1,9 +1,6 @@
 package com.gojek.test;
 
-import com.gojek.exception.InvalidColor;
-import com.gojek.exception.InvalidRegistration;
-import com.gojek.exception.InvalidSlot;
-import com.gojek.exception.ParkingFullException;
+import com.gojek.exception.*;
 import com.gojek.service.ParkingService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,8 +15,13 @@ public class Negative {
 
     private int DEFAULT_SIZE = 10;
 
+    @Test(expected = InvalidParkingSize.class)
+    public void invalidParkingSize() throws InvalidParkingSize {
+        ParkingService parkingservice = new ParkingService(-8);
+    }
+
     @Test(expected = ParkingFullException.class)
-    public void parkWhenParkingFull() throws ParkingFullException, InvalidRegistration {
+    public void parkWhenParkingFull() throws ParkingFullException, InvalidRegistration, InvalidParkingSize {
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         parkingservice.park(ParkingTestHelper.getCar("HR-32-1001", "White"));
         parkingservice.park(ParkingTestHelper.getCar("HR-32-1002", "White"));
@@ -38,7 +40,7 @@ public class Negative {
 
 
     @Test(expected = InvalidSlot.class)
-    public void invalidSlot() throws ParkingFullException, InvalidSlot, InvalidRegistration {
+    public void invalidSlot() throws ParkingFullException, InvalidSlot, InvalidRegistration, InvalidParkingSize {
 
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         //1st slot for
@@ -51,7 +53,7 @@ public class Negative {
 
 
     @Test(expected = InvalidColor.class)
-    public void queryForInvalidColor() throws ParkingFullException, InvalidColor, InvalidRegistration {
+    public void queryForInvalidColor() throws ParkingFullException, InvalidColor, InvalidRegistration, InvalidParkingSize {
 
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         parkingservice.park(ParkingTestHelper.getCar("HR-32-1001", "White"));
@@ -59,7 +61,6 @@ public class Negative {
         //Green  car not yet parked
         parkingservice.getSlotsByColor("Green");
     }
-
 
 
 }

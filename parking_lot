@@ -1,2 +1,10 @@
 #!/bin/bash
+echo "Please Wait...";
+if command -v mvn >/dev/null
+then
+mvn clean install >> log.txt
 java -cp target/go-jek-parking-0.1.jar com.gojek.ApplicationEntryPoint $1
+else
+echo >&2 "Maven not installed";
+
+fi

@@ -1,9 +1,6 @@
 package com.gojek;
 
-import com.gojek.exception.InvalidColor;
-import com.gojek.exception.InvalidRegistration;
-import com.gojek.exception.InvalidSlot;
-import com.gojek.exception.ParkingFullException;
+import com.gojek.exception.*;
 import com.gojek.helper.Constant;
 import com.gojek.model.Car;
 import com.gojek.model.Command;
@@ -47,8 +44,8 @@ public class ApplicationEntryPoint {
         //read command
         String query = bufferedReader.readLine();
 
-        if (query == null) {
-            System.out.println(Constant.INVALID_QUERY);
+        if (query == null || query.isEmpty()) {
+            System.out.println(Constant.EXIT);
             return;
         }
         String[] input = query.split(Constant.SPACE);
@@ -65,7 +62,12 @@ public class ApplicationEntryPoint {
         }
         int size = Integer.parseInt(input[1]);
         System.out.println(MessageFormat.format(Constant.PARKING_INTIALIZE, size));
-        parkingService = new ParkingService(size);
+        try {
+            parkingService = new ParkingService(size);
+        } catch (InvalidParkingSize invalidParkingSize) {
+            System.out.println(invalidParkingSize.getMessage());
+            return;
+        }
 
 
         while (running) {

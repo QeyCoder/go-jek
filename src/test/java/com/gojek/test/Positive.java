@@ -1,9 +1,6 @@
 package com.gojek.test;
 
-import com.gojek.exception.InvalidColor;
-import com.gojek.exception.InvalidRegistration;
-import com.gojek.exception.InvalidSlot;
-import com.gojek.exception.ParkingFullException;
+import com.gojek.exception.*;
 import com.gojek.service.ParkingService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,7 +14,7 @@ public class Positive {
     private static final int DEFAULT_SIZE = 10;
 
     @Test
-    public void parkLeave() throws ParkingFullException, InvalidSlot, InvalidRegistration {
+    public void parkLeave() throws ParkingFullException, InvalidSlot, InvalidRegistration, InvalidParkingSize {
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         String response = parkingservice.park(ParkingTestHelper.getCar("HR-32-9898", "White"));
         Assert.assertEquals("Allocated slot number: 1", response);
@@ -33,7 +30,7 @@ public class Positive {
 
 
     @Test
-    public void removeCar() throws ParkingFullException, InvalidSlot, InvalidRegistration {
+    public void removeCar() throws ParkingFullException, InvalidSlot, InvalidRegistration, InvalidParkingSize {
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         parkingservice.park(ParkingTestHelper.getCar("HR-32-9898", "White"));
         parkingservice.park(ParkingTestHelper.getCar("HR-32-9899", "White"));
@@ -45,7 +42,7 @@ public class Positive {
 
 
     @Test
-    public void registrationByColor() throws ParkingFullException, InvalidSlot, InvalidColor, InvalidRegistration {
+    public void registrationByColor() throws ParkingFullException, InvalidSlot, InvalidColor, InvalidRegistration, InvalidParkingSize {
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         String response = parkingservice.park(ParkingTestHelper.getCar("HR-32-9898", "White"));
         Assert.assertEquals("Allocated slot number: 1", response);
@@ -63,7 +60,7 @@ public class Positive {
 
 
     @Test
-    public void slotByColor() throws ParkingFullException, InvalidSlot, InvalidColor, InvalidRegistration {
+    public void slotByColor() throws ParkingFullException, InvalidSlot, InvalidColor, InvalidRegistration, InvalidParkingSize {
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         parkingservice.park(ParkingTestHelper.getCar("HR-32-9898", "White"));
         parkingservice.park(ParkingTestHelper.getCar("HR-32-9899", "White"));
@@ -77,14 +74,14 @@ public class Positive {
 
 
     @Test
-    public void shouldReturnMinimumAvailbleSlot() throws ParkingFullException, InvalidSlot, InvalidRegistration {
+    public void shouldReturnMinimumAvailbleSlot() throws ParkingFullException, InvalidSlot, InvalidRegistration, InvalidParkingSize {
         parkLeave();
         //same test case will cover min slot
 
     }
 
     @Test
-    public void getColorBySlotId() throws Exception {
+    public void getColorBySlotId() throws InvalidParkingSize, InvalidSlot, ParkingFullException, InvalidRegistration {
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         parkingservice.park(ParkingTestHelper.getCar("HR-32-9898", "White"));
         parkingservice.park(ParkingTestHelper.getCar("HR-32-9899", "White"));
@@ -99,7 +96,7 @@ public class Positive {
     }
 
     @Test
-    public void getSlotByRegistrationId() throws ParkingFullException, InvalidSlot, InvalidColor, InvalidRegistration {
+    public void getSlotByRegistrationId() throws ParkingFullException, InvalidSlot, InvalidColor, InvalidRegistration, InvalidParkingSize {
         ParkingService parkingservice = new ParkingService(DEFAULT_SIZE);
         parkingservice.park(ParkingTestHelper.getCar("HR-32-9898", "White"));
         parkingservice.park(ParkingTestHelper.getCar("HR-32-9899", "White"));

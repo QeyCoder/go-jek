@@ -1,9 +1,6 @@
 package com.gojek.service;
 
-import com.gojek.exception.InvalidColor;
-import com.gojek.exception.InvalidRegistration;
-import com.gojek.exception.InvalidSlot;
-import com.gojek.exception.ParkingFullException;
+import com.gojek.exception.*;
 import com.gojek.helper.Constant;
 import com.gojek.helper.SlotComparator;
 import com.gojek.model.Car;
@@ -35,7 +32,10 @@ public class ParkingService {
     /**
      * @param size
      */
-    public ParkingService(int size) {
+    public ParkingService(int size) throws InvalidParkingSize {
+        if (size < 0 || size > Integer.MAX_VALUE) {
+            throw new InvalidParkingSize(Constant.INVALID_PARKING_SIZE);
+        }
         this.size = size;
         slots = new Slot[size + 1];
         queue = new PriorityQueue<>();
@@ -95,6 +95,7 @@ public class ParkingService {
         colorVsSlots.get(color).remove(slot);
         regVsSlot.remove(car.getRegistrationId().toLowerCase());
         queue.add(slotId);
+        slots[slotId] = null;
         return MessageFormat.format(Constant.FREE_SLOT, slotId);
     }
 
@@ -105,7 +106,7 @@ public class ParkingService {
      */
     public String getSlotsByColor(String color) throws InvalidColor {
         List<Slot> slotList = colorVsSlots.get(color.toLowerCase());
-        if (slotList == null) {
+        if (slotList == null || slotList.isEmpty()) {
             throw new InvalidColor(Constant.NO_CAR_WITH_COLOR);
         }
         Collections.sort(slotList, slotComparator);
@@ -125,7 +126,7 @@ public class ParkingService {
      */
     public String getRegistrationByColor(String color) throws InvalidColor {
         List<Slot> slotList = colorVsSlots.get(color.toLowerCase());
-        if (slotList == null) {
+        if (slotList == null || slotList.isEmpty()) {
             throw new InvalidColor(Constant.NO_CAR_WITH_COLOR);
         }
         Collections.sort(slotList, slotComparator);
