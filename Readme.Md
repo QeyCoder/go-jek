@@ -1,4 +1,4 @@
-This is maven based project
+It's maven based project. Please make sure Maven & Java must be installed on your system to run application properly
 
 Step to run application
 
